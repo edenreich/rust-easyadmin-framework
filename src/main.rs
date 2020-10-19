@@ -24,7 +24,11 @@ serde = { version = \"1.0\", features = [\"derive\"] }
 serde_json = \"1.0\"
 diesel = { version = \"1.3\", features = [\"sqlite\", \"r2d2\"] }
 diesel_migrations = \"1.3\"
-log = \"0.4\"";
+log = \"0.4\"
+
+[[bin]]
+path = \"app/bootstrap.rs\"
+";
 
   match cargo_manifest.write_all(string.as_bytes()) {
     Ok(cargo_manifest) => cargo_manifest,
@@ -32,7 +36,8 @@ log = \"0.4\"";
   };
 
   // @todo add a basic project structure, something like:
-  
+  // app/
+  //  ├── bootstrap.rs
   // database/
   //  ├── migrations/
   // routes/
