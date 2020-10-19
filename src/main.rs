@@ -32,21 +32,22 @@ log = \"0.4\"";
   };
 
   // @todo add a basic project structure, something like:
-  // app/
+  
   // database/
-  //  -> migrations/
+  //  ├── migrations/
   // routes/
-  //  -> admin.rs
-  //  -> frontend.rs
+  //  ├── admin.rs
+  //  ├── frontend.rs
   // controllers/
-  //  -> admin
-  //  -> frontend
+  //  ├── admin
+  //  ├── frontend
+  // models/
   // public/
   // views/
-  //  -> admin/
-  //    -> index.html
-  //  -> frontend/
-  //    -> index.html
+  //  ├── admin/
+  //    ├── index.html // maybe use https://crates.io/crates/handlebars
+  //  ├── frontend/
+  //    ├── index.html
 }
 
 fn make_new_controller(options: &ArgMatches) {
