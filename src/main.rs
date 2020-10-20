@@ -1,12 +1,12 @@
 use clap::{App, Arg, ArgMatches};
-use std::fs::{File, create_dir};
+use std::fs::{create_dir, File};
 use std::io::prelude::*;
 
 fn create_new_project(project_name: &str) {
-  println!("==> Creating new project, {}", project_name);
+  println!("==> Creating new project, {}...", project_name);
   match create_dir(format!("./{}", project_name)) {
     Ok(p) => p,
-    Err(_error) => panic!("Problem creating the project directory, project directory already exists, delete it or give the project a different name!"),
+    Err(_error) => panic!("Problem creating the project directory, project directory already exists, delete it or give the project a different name"),
   };
   let mut cargo_manifest: File = match File::create(format!("{}/Cargo.toml", project_name)) {
     Ok(file) => file,
@@ -27,12 +27,36 @@ diesel_migrations = \"1.3\"
 log = \"0.4\"
 
 [[bin]]
+name = \"bootstrap\" 
 path = \"app/bootstrap.rs\"
 ";
-
   match cargo_manifest.write_all(string.as_bytes()) {
     Ok(cargo_manifest) => cargo_manifest,
     Err(_error) => panic!("Problem writing into project manifest"),
+  };
+  match create_dir(format!("./{}/app", project_name)) {
+    Ok(p) => p,
+    Err(_error) => panic!("Problem creating app directory"),
+  };
+  let mut bootstrap: File = match File::create(format!("{}/app/bootstrap.rs", project_name)) {
+    Ok(file) => file,
+    Err(_error) => panic!("Problem creating the project manifest"),
+  };
+  let string: &str = "#[macro_use] extern crate rocket;
+
+#[get(\"/<name>/<age>\")]
+fn hello(name: String, age: u8) -> String {
+    format!(\"Hello, {} year old named {}!\", age, name)
+}
+
+#[launch]
+fn rocket() -> rocket::Rocket {
+    rocket::ignite().mount(\"/hello\", routes![hello])
+}
+";
+  match bootstrap.write_all(string.as_bytes()) {
+    Ok(cargo_manifest) => cargo_manifest,
+    Err(_error) => panic!("Problem writing into app/bootstrap.rs"),
   };
 
   // @todo add a basic project structure, something like:
@@ -56,15 +80,24 @@ path = \"app/bootstrap.rs\"
 }
 
 fn make_new_controller(options: &ArgMatches) {
-  println!("==> Generating new controller, {}", options.value_of("controller").unwrap());
+  println!(
+    "==> Generating new controller, {}",
+    options.value_of("controller").unwrap()
+  );
 }
 
 fn make_new_model(options: &ArgMatches) {
-  println!("==> Generating new model, {}", options.value_of("model").unwrap());
+  println!(
+    "==> Generating new model, {}",
+    options.value_of("model").unwrap()
+  );
 }
 
 fn make_new_migration(options: &ArgMatches) {
-  println!("==> Generating new migration, {}", options.value_of("migration").unwrap());
+  println!(
+    "==> Generating new migration, {}",
+    options.value_of("migration").unwrap()
+  );
 }
 
 fn main() {
@@ -97,19 +130,31 @@ fn main() {
       ),
     )
     .subcommand(
-      App::new("make:migration").about("Create a new migration").arg(
-        Arg::new("migration")
-          .required(true)
-          .about("The name of the migration"),
-      ),
+      App::new("make:migration")
+        .about("Create a new migration")
+        .arg(
+          Arg::new("migration")
+            .required(true)
+            .about("The name of the migration"),
+        ),
     )
     .get_matches();
 
   match matches.subcommand_name() {
-    Some("new-project") => create_new_project(matches.subcommand_matches("new-project").unwrap().value_of("project").unwrap()),
-    Some("make:controller") => make_new_controller(matches.subcommand_matches("make:controller").unwrap()),
+    Some("new-project") => create_new_project(
+      matches
+        .subcommand_matches("new-project")
+        .unwrap()
+        .value_of("project")
+        .unwrap(),
+    ),
+    Some("make:controller") => {
+      make_new_controller(matches.subcommand_matches("make:controller").unwrap())
+    }
     Some("make:model") => make_new_model(matches.subcommand_matches("make:model").unwrap()),
-    Some("make:migration") => make_new_migration(matches.subcommand_matches("make:migration").unwrap()),
+    Some("make:migration") => {
+      make_new_migration(matches.subcommand_matches("make:migration").unwrap())
+    }
     None => println!("No subcommand was used"),
     _ => unreachable!(),
   }
