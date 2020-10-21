@@ -1,0 +1,14 @@
+[package]
+name = "easyadmin-skeleton"
+version = "0.1.0"
+authors = ["Default Name <email>"]
+edition = "2018"
+
+[dependencies]
+easyadmin = { version = "0.1.0", path = "../lib" }
+rocket = "0.4.5"
+rocket_contrib = "0.4.5" 
+
+[[bin]]
+name = "easyadmin-skeleton"
+path = "bootstrap.rs"
