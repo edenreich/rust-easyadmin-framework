@@ -1,6 +1,12 @@
 extern crate easyadmin;
 use easyadmin::view::AdminView;
 use std::collections::HashMap;
+use rocket::response::Redirect;
+
+#[get("/")]
+pub fn index() -> Redirect {
+    Redirect::to("/dashboard")
+}
 
 #[get("/", format = "text/html")]
 pub fn dashboard() -> Option<AdminView> {
