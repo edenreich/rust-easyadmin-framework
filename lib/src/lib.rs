@@ -27,7 +27,7 @@ pub mod view {
 
         pub fn set(&mut self, data: HashMap<&str, &str>) {
             let mut reg = Handlebars::new();
-            reg.register_templates_directory(".tpl", Path::new("views/admin"))
+            reg.register_templates_directory(".rhb", Path::new("views/admin"))
                 .unwrap();
             self.content = reg.render(&self.template, &json!(data)).unwrap();
         }
@@ -57,7 +57,7 @@ pub mod view {
         }
         pub fn set(&mut self, data: HashMap<&str, &str>) {
             let mut reg = Handlebars::new();
-            reg.register_templates_directory(".tpl", Path::new("views/frontend"))
+            reg.register_templates_directory(".rhb", Path::new("views/frontend"))
                 .unwrap();
             self.content = reg.render(&self.template, &json!(data)).unwrap();
         }
@@ -88,7 +88,7 @@ pub mod view {
 
         pub fn set(&mut self, data: HashMap<&str, &str>) {
             let mut reg = Handlebars::new();
-            reg.register_templates_directory(".tpl", Path::new("views/auth"))
+            reg.register_templates_directory(".rhb", Path::new("views/auth"))
                 .unwrap();
             self.content = reg.render(&self.template, &json!(data)).unwrap();
         }
