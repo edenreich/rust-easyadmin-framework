@@ -1,7 +1,5 @@
 use std::collections::HashMap;
-
-use crate::utils;
-use utils::view::AdminView;
+use crate::utils::view::AdminView;
 
 #[get("/", format = "text/html")]
 pub fn index() -> Option<AdminView> {

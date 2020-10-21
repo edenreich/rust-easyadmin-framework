@@ -5,11 +5,10 @@ extern crate rocket;
 extern crate serde_json;
 extern crate handlebars;
 
-mod controllers;
-use controllers::admin;
-use controllers::frontend;
-
 mod utils;
+mod controllers;
+
+use controllers::{admin, frontend};
 
 fn main() {
     rocket::ignite()

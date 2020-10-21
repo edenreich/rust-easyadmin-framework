@@ -1,10 +1,9 @@
 use handlebars::Handlebars;
-use std::io::Cursor;
-use std::collections::HashMap;
-use std::path::Path;
-use rocket::request::Request;
-use rocket::response::{self, Response, Responder};
 use rocket::http::ContentType;
+use rocket::request::Request;
+use rocket::response::{self, Responder, Response};
+use std::{collections::HashMap, io::Cursor, path::Path};
+
 #[derive(Debug)]
 pub struct AdminView {
     content: String,
@@ -20,7 +19,8 @@ impl AdminView {
     }
     pub fn set(&mut self, data: HashMap<&str, &str>) {
         let mut reg = Handlebars::new();
-        reg.register_templates_directory(".tpl", Path::new("views/admin")).unwrap();
+        reg.register_templates_directory(".tpl", Path::new("views/admin"))
+            .unwrap();
         self.content = reg.render(&self.template, &json!(data)).unwrap();
     }
 }
@@ -49,7 +49,8 @@ impl FrontendView {
     }
     pub fn set(&mut self, data: HashMap<&str, &str>) {
         let mut reg = Handlebars::new();
-        reg.register_templates_directory(".tpl", Path::new("views/frontend")).unwrap();
+        reg.register_templates_directory(".tpl", Path::new("views/frontend"))
+            .unwrap();
         self.content = reg.render(&self.template, &json!(data)).unwrap();
     }
 }

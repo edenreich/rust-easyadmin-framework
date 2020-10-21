@@ -1,7 +1,5 @@
 use std::collections::HashMap;
-
-use crate::utils;
-use utils::view::FrontendView;
+use crate::utils::view::FrontendView;
 
 #[get("/", format = "text/html")]
 pub fn index() -> Option<FrontendView> {
