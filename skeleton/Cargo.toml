@@ -2,7 +2,9 @@
 name = "easyadmin-skeleton"
 version = "0.1.0"
 authors = ["Default Name <email>"]
+description = "A skeleton for easyadmin app written in rust."
 edition = "2018"
+license = "MIT"
 
 [dependencies]
 easyadmin = { version = "0.1.0", path = "../lib" }

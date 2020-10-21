@@ -1,8 +1,15 @@
 [package]
-name = "rust-easyadmin-cli"
+name = "easyadmin-cli"
 version = "0.1.0"
 authors = ["Eden Reich <eden.reich@gmail.com>"]
 edition = "2018"
+description = "A cli tool for easyadmin written in rust."
+documentation = ""
+homepage = ""
+repository = "https://github.com/edenreich/rust-easyadmin"
+readme = "../README.md"
+keywords = ["rocket", "web", "framework", "admin", "admin-panel", "web-framework", "rust"]
+license = "MIT"
 
 [dependencies]
 clap = "3.0.0-beta.2"

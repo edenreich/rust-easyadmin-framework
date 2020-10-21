@@ -286,6 +286,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "easyadmin-cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "easyadmin-skeleton"
 version = "0.1.0"
 dependencies = [
@@ -986,13 +993,6 @@ dependencies = [
  "state",
  "time",
  "unicode-xid 0.1.0",
-]
-
-[[package]]
-name = "rust-easyadmin-cli"
-version = "0.1.0"
-dependencies = [
- "clap",
 ]
 
 [[package]]

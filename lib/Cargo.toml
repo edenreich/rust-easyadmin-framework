@@ -1,8 +1,15 @@
 [package]
 name = "easyadmin"
 version = "0.1.0"
-authors = ["Default Name <email>"]
+authors = ["Eden Reich <eden.reich@gmail.com>"]
 edition = "2018"
+description = "A framework for admin panel made easy written in rust."
+documentation = ""
+homepage = ""
+repository = "https://github.com/edenreich/rust-easyadmin"
+readme = "../../README.md"
+keywords = ["rocket", "web", "framework", "admin", "admin-panel", "web-framework", "rust"]
+license = "MIT"
 
 [dependencies]
 rocket = "0.4.5"
