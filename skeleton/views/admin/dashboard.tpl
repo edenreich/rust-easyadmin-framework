@@ -9815,7 +9815,7 @@
         </div>
         <ul
             class="nav list w-100 w-auto-l flex flex-none flex-row flex-wrap justify-center justify-end-l items-center pv2 ph0 ph4-ns">
-            <li class="tc pv2 ph2 ph4-ns flex-20-s"><a href="/login">Login</a></li>
+            <li class="tc pv2 ph2 ph4-ns flex-20-s"><a href="/auth/login">Login</a></li>
             <li class="tc pv2 ph2 ph4-ns flex-20-s"><a href="/docs">Documentation</a></li>
         </ul>
     </nav>
