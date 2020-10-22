@@ -5,49 +5,33 @@ fn create_new_project(project_name: &str) {
   println!("==> Creating new project, {}...", project_name);
   Command::new("/bin/sh")
     .arg("-c")
-    .arg(format!("git clone https://github.com/edenreich/rust-easyadmin.git {}", project_name))
+    .arg(format!(
+      "git clone https://github.com/edenreich/rust-easyadmin.git {}",
+      project_name
+    ))
     .output()
     .expect("failed to execute process");
-
-  // @todo add a basic project structure, something like:
-  // app/
-  //  ├── bootstrap.rs
-  // database/
-  //  ├── migrations/
-  // routes/
-  //  ├── admin.rs
-  //  ├── frontend.rs
-  // controllers/
-  //  ├── admin
-  //  ├── frontend
-  // models/
-  // public/
-  // views/
-  //  ├── admin/
-  //    ├── index.html // maybe use https://crates.io/crates/handlebars
-  //  ├── frontend/
-  //    ├── index.html
 }
 
 fn make_new_controller(options: &ArgMatches) {
-  println!(
-    "==> Generating new controller, {}",
-    options.value_of("controller").unwrap()
-  );
+  let controllerName = options.value_of("controller").unwrap();
+  println!("==> Generating new controller, {}", controllerName);
+
+  //@todo generate a new controller
 }
 
 fn make_new_model(options: &ArgMatches) {
-  println!(
-    "==> Generating new model, {}",
-    options.value_of("model").unwrap()
-  );
+  let modelName = options.value_of("model").unwrap();
+  println!("==> Generating new model, {}", modelName);
+
+  //@todo generate a new model
 }
 
 fn make_new_migration(options: &ArgMatches) {
-  println!(
-    "==> Generating new migration, {}",
-    options.value_of("migration").unwrap()
-  );
+  let migrationName = options.value_of("migration").unwrap();
+  println!("==> Generating new migration, {}", migrationName);
+
+  //@todo generate a new migration
 }
 
 fn main() {
