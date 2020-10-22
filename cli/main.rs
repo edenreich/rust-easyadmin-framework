@@ -6,8 +6,9 @@ fn create_new_project(project_name: &str) {
   Command::new("/bin/sh")
     .arg("-c")
     .arg(format!(
-      "git clone https://github.com/edenreich/rust-easyadmin.git {}",
-      project_name
+      "git clone https://github.com/edenreich/rust-easyadmin.git {} && rm -rf ./{}/.git",
+      project_name,
+      project_name,
     ))
     .output()
     .expect("failed to execute process");
