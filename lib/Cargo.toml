@@ -7,7 +7,7 @@ description = "A framework for admin panel made easy written in rust."
 documentation = ""
 homepage = ""
 repository = "https://github.com/edenreich/rust-easyadmin"
-readme = "../../README.md"
+readme = "../README.md"
 keywords = ["rocket", "web", "framework", "admin", "admin-panel", "web-framework", "rust"]
 license = "MIT"
 
