@@ -5,12 +5,12 @@ extern crate serde_json;
 extern crate handlebars;
 
 pub mod view {
-
     use handlebars::Handlebars;
     use rocket::http::ContentType;
     use rocket::request::Request;
     use rocket::response::{self, Responder, Response};
     use std::{collections::HashMap, io::Cursor, path::Path};
+
     #[derive(Debug)]
     pub struct AdminView {
         content: String,
