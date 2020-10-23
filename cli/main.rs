@@ -1,7 +1,29 @@
 use clap::{App, AppSettings, Arg, ArgMatches};
 use std::process::Command;
 use std::process::Output;
+use std::{fs, path::Path};
 use termion::{color, style};
+
+fn print_info(message: &str) {
+  println!(
+    "{}{}info:{} {}",
+    color::Fg(color::Blue),
+    style::Bold,
+    style::Reset,
+    message
+  );
+}
+
+fn print_error_and_exit(message: &str) {
+  println!(
+    "{}{}error:{} {}",
+    color::Fg(color::Red),
+    style::Bold,
+    style::Reset,
+    message
+  );
+  std::process::exit(1);
+}
 
 fn create_new_project(project_name: &str) {
   println!("==> Creating new project, {}...", project_name);
@@ -33,9 +55,19 @@ fn make_new_migration(options: &ArgMatches) {
   let migration_name = options.value_of("migration").unwrap();
   println!("==> Generating new migration, {}", migration_name);
 
+  if !Path::new("database/migrations").exists() {
+    match fs::create_dir_all("database/migrations") {
+      Ok(_) => print_info(&"Created database/migrations directory because it was not exists."),
+      Err(_) => print_error_and_exit(&"Could not create database/migrations directory"),
+    }
+  }
+
   let output: Output = Command::new("/bin/sh")
     .arg("-c")
-    .arg(format!("diesel migration generate {}", migration_name,))
+    .arg(format!(
+      "diesel migration --migration-dir database/migrations generate {}",
+      migration_name,
+    ))
     .output()
     .expect("failed to execute process");
 
@@ -43,8 +75,7 @@ fn make_new_migration(options: &ArgMatches) {
   let display_stderr: String = String::from_utf8(output.stderr).unwrap();
 
   if !output.status.success() {
-    println!("{}{}error:{} {}", color::Fg(color::Red), style::Bold, style::Reset, display_stderr);
-    std::process::exit(1);
+    print_error_and_exit(&display_stderr);
   }
 
   println!("{}", display_stdout);
