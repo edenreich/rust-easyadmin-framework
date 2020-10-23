@@ -27,9 +27,11 @@ fn print_error_and_exit<T: std::fmt::Display>(message: T) {
 
 fn create_new_project(project_name: &str) {
   if Path::new(project_name).exists() {
-    print_error_and_exit(format!("project {} already exists, use a different name.", project_name));
+    print_error_and_exit(format!(
+      "project {} already exists, use a different name.",
+      project_name
+    ));
   }
-
   println!("==> Creating new project, {}...", project_name);
   Command::new("/bin/sh")
     .arg("-c")
@@ -39,7 +41,11 @@ fn create_new_project(project_name: &str) {
     ))
     .output()
     .expect("failed to execute process");
-  print_info(format!("project {} has been created. Run: cd {}.", project_name, project_name));
+  print_info(format!(
+    "project {} has been created. Run: cd {}.",
+    project_name, project_name
+  ));
+  std::process::exit(0);
 }
 
 fn make_new_controller(options: &ArgMatches) {
