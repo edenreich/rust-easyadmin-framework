@@ -14,22 +14,22 @@ fn create_new_project(project_name: &str) {
 }
 
 fn make_new_controller(options: &ArgMatches) {
-  let controllerName = options.value_of("controller").unwrap();
-  println!("==> Generating new controller, {}", controllerName);
+  let controller_name = options.value_of("controller").unwrap();
+  println!("==> Generating new controller, {}", controller_name);
 
   //@todo generate a new controller
 }
 
 fn make_new_model(options: &ArgMatches) {
-  let modelName = options.value_of("model").unwrap();
-  println!("==> Generating new model, {}", modelName);
+  let model_name = options.value_of("model").unwrap();
+  println!("==> Generating new model, {}", model_name);
 
   //@todo generate a new model
 }
 
 fn make_new_migration(options: &ArgMatches) {
-  let migrationName = options.value_of("migration").unwrap();
-  println!("==> Generating new migration, {}", migrationName);
+  let migration_name = options.value_of("migration").unwrap();
+  println!("==> Generating new migration, {}", migration_name);
 
   //@todo generate a new migration
 }
