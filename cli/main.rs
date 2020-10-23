@@ -90,6 +90,25 @@ fn make_new_migration(options: &ArgMatches) {
   std::process::exit(0);
 }
 
+fn run_migrations() {
+  let output: Output = Command::new("/bin/sh")
+    .arg("-c")
+    .arg("diesel migration --migration-dir database/migrations run")
+    .output()
+    .expect("failed to execute process");
+
+  if !output.status.success() {
+    if output.stderr.is_empty() {
+      print_error_and_exit(String::from_utf8(output.stdout.clone()).unwrap());
+    } else {
+      print_error_and_exit(String::from_utf8(output.stderr).unwrap());
+    }
+  }
+
+  println!("{}", String::from_utf8(output.stdout).unwrap());
+  std::process::exit(0);
+}
+
 fn main() {
   let matches = App::new("Rust EasyAdmin")
     .setting(AppSettings::ArgRequiredElseHelp)
@@ -129,6 +148,7 @@ fn main() {
             .about("The name of the migration"),
         ),
     )
+    .subcommand(App::new("run:migrations").about("Run the migrations"))
     .get_matches();
 
   match matches.subcommand_name() {
@@ -146,6 +166,7 @@ fn main() {
     Some("make:migration") => {
       make_new_migration(matches.subcommand_matches("make:migration").unwrap())
     }
+    Some("run:migrations") => run_migrations(),
     None => println!("No subcommand was used"),
     _ => unreachable!(),
   }
