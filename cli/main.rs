@@ -42,7 +42,7 @@ fn create_new_project(project_name: &str) {
     .output()
     .expect("failed to execute process");
   print_info(format!(
-    "project {} has been created. Run: cd {}.",
+    "project {} has been created. Run: cd {} && docker-compose up -d",
     project_name, project_name
   ));
   std::process::exit(0);
