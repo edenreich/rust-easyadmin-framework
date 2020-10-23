@@ -1,4 +1,4 @@
-use clap::{App, Arg, ArgMatches};
+use clap::{App, AppSettings, Arg, ArgMatches};
 use std::process::Command;
 
 fn create_new_project(project_name: &str) {
@@ -36,6 +36,7 @@ fn make_new_migration(options: &ArgMatches) {
 
 fn main() {
   let matches = App::new("Rust EasyAdmin")
+    .setting(AppSettings::ArgRequiredElseHelp)
     .version("1.0")
     .author("Eden Reich <eden.reich@gmail.com>")
     .about("An admin panel made easy written in rust.")
