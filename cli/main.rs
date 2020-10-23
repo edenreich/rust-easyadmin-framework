@@ -4,7 +4,7 @@ use std::process::Output;
 use std::{fs, path::Path};
 use termion::{color, style};
 
-fn print_info(message: &str) {
+fn print_info<T: std::fmt::Display>(message: T) {
   println!(
     "{}{}info:{} {}",
     color::Fg(color::Blue),
@@ -14,7 +14,7 @@ fn print_info(message: &str) {
   );
 }
 
-fn print_error_and_exit(message: &str) {
+fn print_error_and_exit<T: std::fmt::Display>(message: T) {
   println!(
     "{}{}error:{} {}",
     color::Fg(color::Red),
@@ -26,6 +26,10 @@ fn print_error_and_exit(message: &str) {
 }
 
 fn create_new_project(project_name: &str) {
+  if Path::new(project_name).exists() {
+    print_error_and_exit(format!("project {} already exists, use a different name.", project_name));
+  }
+
   println!("==> Creating new project, {}...", project_name);
   Command::new("/bin/sh")
     .arg("-c")
@@ -35,6 +39,7 @@ fn create_new_project(project_name: &str) {
     ))
     .output()
     .expect("failed to execute process");
+  print_info(format!("project {} has been created. Run: cd {}.", project_name, project_name));
 }
 
 fn make_new_controller(options: &ArgMatches) {
@@ -57,8 +62,8 @@ fn make_new_migration(options: &ArgMatches) {
 
   if !Path::new("database/migrations").exists() {
     match fs::create_dir_all("database/migrations") {
-      Ok(_) => print_info(&"Created database/migrations directory because it was not exists."),
-      Err(_) => print_error_and_exit(&"Could not create database/migrations directory"),
+      Ok(_) => print_info("created database/migrations directory because it was not exists."),
+      Err(_) => print_error_and_exit("could not create database/migrations directory."),
     }
   }
 
@@ -71,14 +76,11 @@ fn make_new_migration(options: &ArgMatches) {
     .output()
     .expect("failed to execute process");
 
-  let display_stdout: String = String::from_utf8(output.stdout).unwrap();
-  let display_stderr: String = String::from_utf8(output.stderr).unwrap();
-
   if !output.status.success() {
-    print_error_and_exit(&display_stderr);
+    print_error_and_exit(String::from_utf8(output.stderr).unwrap());
   }
 
-  println!("{}", display_stdout);
+  println!("{}", String::from_utf8(output.stdout).unwrap());
   std::process::exit(0);
 }
 
