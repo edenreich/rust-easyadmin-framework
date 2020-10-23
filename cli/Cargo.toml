@@ -12,7 +12,8 @@ keywords = ["rocket", "web", "framework", "admin", "admin-panel", "web-framework
 license = "MIT"
 
 [dependencies]
-clap = "3.0.0-beta.2"
+termion = "1.5.5"
+clap = { version = "3.0.0-beta.2", features = [ "color" ] }
 diesel_cli = "1.4.1"
 
 [[bin]]

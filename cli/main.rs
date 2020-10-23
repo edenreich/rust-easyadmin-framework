@@ -1,5 +1,7 @@
 use clap::{App, AppSettings, Arg, ArgMatches};
 use std::process::Command;
+use std::process::Output;
+use termion::{color, style};
 
 fn create_new_project(project_name: &str) {
   println!("==> Creating new project, {}...", project_name);
@@ -31,7 +33,22 @@ fn make_new_migration(options: &ArgMatches) {
   let migration_name = options.value_of("migration").unwrap();
   println!("==> Generating new migration, {}", migration_name);
 
-  //@todo generate a new migration
+  let output: Output = Command::new("/bin/sh")
+    .arg("-c")
+    .arg(format!("diesel migration generate {}", migration_name,))
+    .output()
+    .expect("failed to execute process");
+
+  let display_stdout: String = String::from_utf8(output.stdout).unwrap();
+  let display_stderr: String = String::from_utf8(output.stderr).unwrap();
+
+  if !output.status.success() {
+    println!("{}{}error:{} {}", color::Fg(color::Red), style::Bold, style::Reset, display_stderr);
+    std::process::exit(1);
+  }
+
+  println!("{}", display_stdout);
+  std::process::exit(0);
 }
 
 fn main() {
