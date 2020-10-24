@@ -45,7 +45,7 @@ fn key_generate() {
     .output()
     .expect("failed to execute process");
 
-  print_info(format!("random base64 key {} has been generated.", base64string));
+  print_info(format!("random base64 key has been generated.", base64string));
 }
 
 fn make_project(project_name: &str) {
