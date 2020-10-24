@@ -25,7 +25,30 @@ fn print_error_and_exit<T: std::fmt::Display>(message: T) {
   std::process::exit(1);
 }
 
-fn create_new_project(project_name: &str) {
+fn key_generate() {
+  if !Path::new(".env").exists() {
+    fs::copy(".env.dist", ".env").unwrap();
+  }
+
+  let output: Output = Command::new("/bin/sh")
+    .arg("-c")
+    .arg(format!("openssl rand -base64 32"))
+    .output()
+    .expect("failed to execute process");
+
+  let base64string: String = String::from_utf8(output.stdout).unwrap();
+  let sed_command: String = format!("sed -i -e 's/^ROCKET_SECRET_KEY=$/ROCKET_SECRET_KEY={}/g' .env", base64string.escape_default()); 
+
+  Command::new("/bin/sh")
+    .arg("-c")
+    .arg(sed_command)
+    .output()
+    .expect("failed to execute process");
+
+  print_info(format!("random base64 key {} has been generated.", base64string));
+}
+
+fn make_project(project_name: &str) {
   if Path::new(project_name).exists() {
     print_error_and_exit(format!(
       "project {} already exists, use a different name.",
@@ -41,6 +64,7 @@ fn create_new_project(project_name: &str) {
     ))
     .output()
     .expect("failed to execute process");
+
   print_info(format!(
     "project {} has been created. Run: cd {} && docker-compose up -d",
     project_name, project_name
@@ -48,21 +72,21 @@ fn create_new_project(project_name: &str) {
   std::process::exit(0);
 }
 
-fn make_new_controller(options: &ArgMatches) {
+fn make_controller(options: &ArgMatches) {
   let controller_name = options.value_of("controller").unwrap();
   println!("==> Generating new controller, {}", controller_name);
 
   //@todo generate a new controller
 }
 
-fn make_new_model(options: &ArgMatches) {
+fn make_model(options: &ArgMatches) {
   let model_name = options.value_of("model").unwrap();
   println!("==> Generating new model, {}", model_name);
 
   //@todo generate a new model
 }
 
-fn make_new_migration(options: &ArgMatches) {
+fn make_migration(options: &ArgMatches) {
   let migration_name = options.value_of("migration").unwrap();
   println!("==> Generating new migration, {}", migration_name);
 
@@ -115,6 +139,7 @@ fn main() {
     .version("1.0")
     .author("Eden Reich <eden.reich@gmail.com>")
     .about("An admin panel made easy written in rust.")
+    .subcommand(App::new("key:generate").about("Generate a base64 key for the rocket server"))
     .subcommand(
       App::new("make:project").about("Create a new project").arg(
         Arg::new("project")
@@ -152,7 +177,7 @@ fn main() {
     .get_matches();
 
   match matches.subcommand_name() {
-    Some("make:project") => create_new_project(
+    Some("make:project") => make_project(
       matches
         .subcommand_matches("make:project")
         .unwrap()
@@ -160,13 +185,12 @@ fn main() {
         .unwrap(),
     ),
     Some("make:controller") => {
-      make_new_controller(matches.subcommand_matches("make:controller").unwrap())
+      make_controller(matches.subcommand_matches("make:controller").unwrap())
     }
-    Some("make:model") => make_new_model(matches.subcommand_matches("make:model").unwrap()),
-    Some("make:migration") => {
-      make_new_migration(matches.subcommand_matches("make:migration").unwrap())
-    }
+    Some("make:model") => make_model(matches.subcommand_matches("make:model").unwrap()),
+    Some("make:migration") => make_migration(matches.subcommand_matches("make:migration").unwrap()),
     Some("run:migrations") => run_migrations(),
+    Some("key:generate") => key_generate(),
     None => println!("No subcommand was used"),
     _ => unreachable!(),
   }
