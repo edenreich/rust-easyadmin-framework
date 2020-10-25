@@ -1,14 +1,22 @@
 #![feature(proc_macro_hygiene, decl_macro)]
-extern crate rocket;
+
 #[macro_use]
 extern crate serde_json;
-extern crate handlebars;
+
+pub mod thirdparty {
+    pub extern crate handlebars;
+    pub extern crate diesel;
+    pub extern crate r2d2;
+    pub extern crate r2d2_diesel;
+    pub extern crate rocket;
+    pub extern crate rocket_contrib;
+}
 
 pub mod view {
-    use handlebars::Handlebars;
-    use rocket::http::ContentType;
-    use rocket::request::Request;
-    use rocket::response::{self, Responder, Response};
+    use super::thirdparty::handlebars::Handlebars;
+    use super::thirdparty::rocket::http::ContentType;
+    use super::thirdparty::rocket::request::Request;
+    use super::thirdparty::rocket::response::{self, Responder, Response};
     use std::{collections::HashMap, io::Cursor, path::Path};
 
     #[derive(Debug)]
