@@ -5,7 +5,6 @@ extern crate serde_json;
 
 pub mod thirdparty {
     pub extern crate handlebars;
-    pub extern crate diesel;
     pub extern crate r2d2;
     pub extern crate r2d2_diesel;
     pub extern crate rocket;
