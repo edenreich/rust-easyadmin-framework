@@ -37,7 +37,10 @@ fn key_generate() {
     .expect("failed to execute process");
 
   let base64string: String = String::from_utf8(output.stdout).unwrap();
-  let sed_command: String = format!("sed -i -e 's/^ROCKET_SECRET_KEY=$/ROCKET_SECRET_KEY={}/g' .env", base64string.escape_default()); 
+  let sed_command: String = format!(
+    "sed -i -e 's/^ROCKET_SECRET_KEY=$/ROCKET_SECRET_KEY={}/g' .env",
+    base64string.escape_default()
+  );
 
   Command::new("/bin/sh")
     .arg("-c")
@@ -133,47 +136,67 @@ fn run_migrations() {
   std::process::exit(0);
 }
 
+fn print_schema() {
+  let output: Output = Command::new("/bin/sh")
+    .arg("-c")
+    .arg("diesel print-schema")
+    .output()
+    .expect("failed to execute process");
+
+  if !output.status.success() {
+    if output.stderr.is_empty() {
+      print_error_and_exit(String::from_utf8(output.stdout.clone()).unwrap());
+    } else {
+      print_error_and_exit(String::from_utf8(output.stderr).unwrap());
+    }
+  }
+
+  println!("{}", String::from_utf8(output.stdout).unwrap());
+  std::process::exit(0);
+}
+
 fn main() {
   let matches = App::new("Rust EasyAdmin")
     .setting(AppSettings::ArgRequiredElseHelp)
     .version("1.0")
     .author("Eden Reich <eden.reich@gmail.com>")
     .about("An admin panel made easy written in rust.")
-    .subcommand(App::new("key:generate").about("Generate a base64 key for the rocket server"))
+    .subcommand(App::new("key:generate").about("Generate a base64 key for the rocket server."))
     .subcommand(
-      App::new("make:project").about("Create a new project").arg(
+      App::new("make:project").about("Create a new project.").arg(
         Arg::new("project")
           .required(true)
-          .about("The name of the project"),
+          .about("The name of the project."),
       ),
     )
     .subcommand(
       App::new("make:controller")
-        .about("Create a new controller")
+        .about("Create a new controller.")
         .arg(
           Arg::new("controller")
             .required(true)
-            .about("The name of the controller"),
+            .about("The name of the controller."),
         )
-        .arg("-c, --crud   'Create CRUD controller'"),
+        .arg("-c, --crud   'Create CRUD controller.'"),
     )
     .subcommand(
       App::new("make:model").about("Create a new model").arg(
         Arg::new("model")
           .required(true)
-          .about("The name of the model"),
+          .about("The name of the model."),
       ),
     )
     .subcommand(
       App::new("make:migration")
-        .about("Create a new migration")
+        .about("Create a new migration.")
         .arg(
           Arg::new("migration")
             .required(true)
-            .about("The name of the migration"),
+            .about("The name of the migration."),
         ),
     )
-    .subcommand(App::new("run:migrations").about("Run the migrations"))
+    .subcommand(App::new("run:migrations").about("Run the migrations."))
+    .subcommand(App::new("print:schema").about("Print table definitions for database schema."))
     .get_matches();
 
   match matches.subcommand_name() {
@@ -190,8 +213,9 @@ fn main() {
     Some("make:model") => make_model(matches.subcommand_matches("make:model").unwrap()),
     Some("make:migration") => make_migration(matches.subcommand_matches("make:migration").unwrap()),
     Some("run:migrations") => run_migrations(),
+    Some("print:schema") => print_schema(),
     Some("key:generate") => key_generate(),
-    None => println!("No subcommand was used"),
+    None => print_error_and_exit("Unknown command. List available commands with easyadmin --help."),
     _ => unreachable!(),
   }
 }
